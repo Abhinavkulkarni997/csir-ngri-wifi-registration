@@ -462,7 +462,7 @@ const handleLogout = async () => {
       throw new Error("Logout failed.");
     }
 
-    navigate("/wifi-admin/login", {
+    navigate("/admin/login", {
       replace: true,
     });
   } catch (error) {

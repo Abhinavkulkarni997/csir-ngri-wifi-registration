@@ -31,7 +31,7 @@ const AdminLogin = () => {
       const result = await response.json();
 
       if (result.success) {
-        navigate("/registrations", {
+        navigate("/admin/registrations", {
           replace: true,
         });
       }
