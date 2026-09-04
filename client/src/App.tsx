@@ -14,7 +14,7 @@ function App() {
           element={<ChatContainer />}
         />
          <Route
-          path="/wifi-admin/login"
+          path="/admin/login"
           element={<AdminLogin />}
         />
 
