@@ -72,7 +72,8 @@ export const questions: ChatQuestion[] = [
     id: 'devices',
     type: 'device-select',
     message:
-      'Which device would you like to connect to the CSIR-NGRI Wi-Fi? You can select a laptop, smartphone, or both.',
+    //   'Which device would you like to connect to the CSIR-NGRI Wi-Fi? You can select a laptop, smartphone, or both.',
+        'Which device would you like to connect to the CSIR-NGRI Wi-Fi?',
   },
 
   {
@@ -93,7 +94,8 @@ export const questions: ChatQuestion[] = [
     id: 'smartphoneOS',
     type: 'smartphone-os',
     message:
-      "Your laptop is configured. Now let's configure your smartphone. Which operating system does it use?",
+    //   "Your laptop is configured. Now let's configure your smartphone. Which operating system does it use?",
+    "Let's configure your smartphone. Which operating system does it use?",
   },
 
   {

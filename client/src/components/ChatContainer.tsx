@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
   Wifi,
-  Laptop,
+//   Laptop,
   Smartphone,
   Monitor,
   Apple,
@@ -35,6 +35,7 @@ import { getQuestionById } from "../chatbot/questions";
 
 import type { ConversationState } from "../chatbot/questionTypes";
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 export default function ChatContainer() {
   const [conversation, setConversation] = useState<ConversationState>(
     createInitialConversation(),
@@ -856,7 +857,7 @@ export default function ChatContainer() {
                     );
 
                     const response = await fetch(
-                      "http://localhost:5010/api/registrations",
+                      `${API_BASE_URL}/api/registrations`,
                       {
                         method: "POST",
 
@@ -1151,68 +1152,126 @@ function QuestionRenderer({
        DEVICE SELECTION
        ======================================================== */
 
+    // case "device-select":
+    //   return (
+    //     <OptionCards
+    //       multiple
+    //       options={[
+    //         {
+    //           value: "laptop",
+    //           label: "Laptop",
+    //           description: "Register a Windows, Linux or macOS laptop.",
+    //           icon: <Laptop size={25} />,
+    //         },
+    //         {
+    //           value: "smartphone",
+    //           label: "Smartphone",
+    //           description: "Register an Android or iOS device.",
+    //           icon: <Smartphone size={25} />,
+    //         },
+    //       ]}
+    //       onSelect={(values) => {
+    //         const updatedState: ConversationState = {
+    //           ...conversation,
+
+    //           messages: [
+    //             ...conversation.messages,
+    //             {
+    //               id: crypto.randomUUID(),
+    //               role: "user",
+    //               content: values
+    //                 .map((value) =>
+    //                   value === "laptop" ? "Laptop" : "Smartphone",
+    //                 )
+    //                 .join(" + "),
+    //               timestamp: Date.now(),
+    //                questionId: "devices",
+    //             },
+    //           ],
+
+    //           formData: {
+    //             ...conversation.formData,
+
+    //             devices: {
+    //               laptop: {
+    //                 ...conversation.formData.devices?.laptop,
+
+    //                 requested: values.includes("laptop"),
+    //               },
+
+    //               smartphone: {
+    //                 ...conversation.formData.devices?.smartphone,
+
+    //                 requested: values.includes("smartphone"),
+    //               },
+    //             },
+    //           },
+    //         };
+
+    //         setConversation(updatedState);
+
+    //         showNextQuestion(updatedState);
+    //       }}
+    //     />
+    //   );
     case "device-select":
-      return (
-        <OptionCards
-          multiple
-          options={[
+  return (
+    <OptionCards
+      options={[
+        {
+          value: "smartphone",
+          label: "Smartphone",
+          description:
+            "Register an Android or iOS smartphone.",
+          icon: <Smartphone size={25} />,
+        },
+      ]}
+      onSelect={([value]) => {
+        const updatedState: ConversationState = {
+          ...conversation,
+
+          messages: [
+            ...conversation.messages,
+
             {
-              value: "laptop",
-              label: "Laptop",
-              description: "Register a Windows, Linux or macOS laptop.",
-              icon: <Laptop size={25} />,
+              id: crypto.randomUUID(),
+
+              role: "user",
+
+              content: "Smartphone",
+
+              timestamp: Date.now(),
+
+              questionId: "devices",
             },
-            {
-              value: "smartphone",
-              label: "Smartphone",
-              description: "Register an Android or iOS device.",
-              icon: <Smartphone size={25} />,
-            },
-          ]}
-          onSelect={(values) => {
-            const updatedState: ConversationState = {
-              ...conversation,
+          ],
 
-              messages: [
-                ...conversation.messages,
-                {
-                  id: crypto.randomUUID(),
-                  role: "user",
-                  content: values
-                    .map((value) =>
-                      value === "laptop" ? "Laptop" : "Smartphone",
-                    )
-                    .join(" + "),
-                  timestamp: Date.now(),
-                   questionId: "devices",
-                },
-              ],
+          formData: {
+            ...conversation.formData,
 
-              formData: {
-                ...conversation.formData,
+            devices: {
+              laptop: {
+                ...conversation.formData.devices?.laptop,
 
-                devices: {
-                  laptop: {
-                    ...conversation.formData.devices?.laptop,
-
-                    requested: values.includes("laptop"),
-                  },
-
-                  smartphone: {
-                    ...conversation.formData.devices?.smartphone,
-
-                    requested: values.includes("smartphone"),
-                  },
-                },
+                requested: false,
               },
-            };
 
-            setConversation(updatedState);
+              smartphone: {
+                ...conversation.formData.devices?.smartphone,
 
-            showNextQuestion(updatedState);
-          }}
-        />
-      );
+                requested: value === "smartphone",
+              },
+            },
+          },
+        };
+
+        setConversation(updatedState);
+
+        showNextQuestion(updatedState);
+      }}
+    />
+  );
+
 
     /* ========================================================
    LAPTOP OPERATING SYSTEM

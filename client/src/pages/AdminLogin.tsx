@@ -78,7 +78,7 @@ const AdminLogin = () => {
         );
       }
 
-      navigate("/registrations", {
+      navigate("/admin/registrations", {
         replace: true,
       });
     } catch (error) {

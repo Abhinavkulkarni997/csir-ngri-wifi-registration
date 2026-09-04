@@ -23,7 +23,7 @@ export default function ChatReview({
   isSubmitting = false,
   completed = false,
 }: ChatReviewProps) {
-  const laptop = formData.devices?.laptop;
+//   const laptop = formData.devices?.laptop;
   const smartphone = formData.devices?.smartphone;
   const guesthouse = formData.guesthouse;
 
@@ -149,7 +149,7 @@ export default function ChatReview({
           {/* RIGHT COLUMN */}
           <div className="p-4 sm:p-5 space-y-3">
             {/* LAPTOP */}
-            <ReviewRow
+            {/* <ReviewRow
               label="Laptop"
               value={
                 laptop?.requested
@@ -173,7 +173,7 @@ export default function ChatReview({
                 onEdit={onEdit}
                 disabled={isSubmitting}
               />
-            )}
+            )} */}
 
             {/* SMARTPHONE */}
             <ReviewRow

@@ -82,39 +82,40 @@ export const getNextQuestionId = (
        DEVICE SELECTION
        ===================================================== */
 
-    case "devices": {
-      const laptopRequested = formData.devices?.laptop?.requested === true;
+    // case "devices": {
+    //   const laptopRequested = formData.devices?.laptop?.requested === true;
 
-      const smartphoneRequested =
-        formData.devices?.smartphone?.requested === true;
+    //   const smartphoneRequested =
+    //     formData.devices?.smartphone?.requested === true;
 
-      /*
-       * At least one device should be
-       * selected by the UI.
-       *
-       * Laptop gets configured first
-       * when both are selected.
-       */
+    //   /*
+    //    * At least one device should be
+    //    * selected by the UI.
+    //    *
+    //    * Laptop gets configured first
+    //    * when both are selected.
+    //    */
 
-      if (laptopRequested) {
-        return "laptopOS";
-      }
+    //   if (laptopRequested) {
+    //     return "laptopOS";
+    //   }
 
-      if (smartphoneRequested) {
+    //   if (smartphoneRequested) {
+    //     return "smartphoneOS";
+    //   }
+
+    //   /*
+    //    * Safety fallback.
+    //    *
+    //    * The OptionCards component should
+    //    * prevent this situation, but if it
+    //    * happens we continue to guesthouse.
+    //    */
+
+    //   return "guesthouseStaying";
+    // }
+    case "devices":
         return "smartphoneOS";
-      }
-
-      /*
-       * Safety fallback.
-       *
-       * The OptionCards component should
-       * prevent this situation, but if it
-       * happens we continue to guesthouse.
-       */
-
-      return "guesthouseStaying";
-    }
-
     /* =====================================================
        LAPTOP MAC ADDRESS
        ===================================================== */
