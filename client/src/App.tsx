@@ -7,7 +7,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
   return (
-    <BrowserRouter basename="/wifiregistration">
+    <BrowserRouter basename="/registrationform">
       <Routes>
         <Route
           path="/"
