@@ -409,7 +409,7 @@ export default function ChatContainer() {
     }
 
     const editMessages: Record<string, string> = {
-      fullName: "Sure! Let's update your full name. Please enter it again.",
+      fullName: "Sure! Let's update your full name. Please enter it again.(Please mention the name dispalyed in your official ID Card , this will be printed on the certificate)",
 
       designation: "Sure! Let's update your designation.",
 
@@ -693,7 +693,7 @@ export default function ChatContainer() {
                   truncate
                 "
                 >
-                  Wi-Fi Access Registration Portal
+                  Registration Portal
                 </p>
               </div>
             </div>
@@ -754,7 +754,7 @@ export default function ChatContainer() {
               
             "
             >
-              Training Programme On Network Security for Network Administrators
+              Training Programme On "Network Security for Network Administrators"
             </p>
 
             <h1
@@ -766,7 +766,7 @@ export default function ChatContainer() {
               mt-1
             "
             >
-              Wi-Fi Registration Form
+             Registration Form
             </h1>
 
             <p
@@ -776,7 +776,7 @@ export default function ChatContainer() {
               mt-2
             "
             >
-              CSIR-National Geophysical Research Institute
+             
             </p>
 
             <p
@@ -786,7 +786,7 @@ export default function ChatContainer() {
               mt-1
             "
             >
-              Uppal Road, Hyderabad-500007
+              
             </p>
           </div>
         </div>
@@ -1060,7 +1060,7 @@ function QuestionRenderer({
   setConversation,
 
   showNextQuestion,
-  onEdit,
+//   onEdit,
   existingAnswer,
 }: QuestionRendererProps) {
   console.log("CURRENT QUESTION TYPE:", questionType);

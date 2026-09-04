@@ -1,6 +1,6 @@
-import { ReactNode, useEffect, useState } from "react";
+import {  useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
-
+import type { ReactNode } from "react";
 const API_BASE_URL =
   import.meta.env.VITE_API_BASE_URL;
 

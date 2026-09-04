@@ -19,7 +19,7 @@ export default function OptionCards({
   options,
   onSelect,
   multiple = false,
-  initialValues=[],
+//   initialValues=[],
 }: OptionCardsProps) {
   const [selectedValues, setSelectedValues] = useState<string[]>([]);
 

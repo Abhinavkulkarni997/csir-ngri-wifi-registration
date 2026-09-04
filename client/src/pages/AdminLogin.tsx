@@ -1,6 +1,6 @@
-import { FormEvent, useState,useEffect } from "react";
+import {  useState,useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-
+import type { FormEvent } from "react";
 const API_BASE_URL =
   import.meta.env.VITE_API_BASE_URL;
 import NgriLogo from "../assets/ngrilogo.png";
