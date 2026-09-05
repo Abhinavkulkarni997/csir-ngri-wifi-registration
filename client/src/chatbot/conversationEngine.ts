@@ -26,6 +26,13 @@ export const createInitialConversation = (): ConversationState => {
 
             timestamp: Date.now(),
           },
+    //        {
+    //     id: crypto.randomUUID(),
+    //     role: "bot",
+    //     content:
+    //       "Important Instructions:\n\n• Please read the form carefully and enter all details correctly before submitting.\n• For the best experience, please use the latest version of Google Chrome or Mozilla Firefox.",
+    //     timestamp: Date.now(),
+    //   },
         ]
       : [],
 

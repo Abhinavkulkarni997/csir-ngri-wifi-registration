@@ -4,6 +4,55 @@ import Registration from "../models/registration.model";
 
 /*
  * ============================================================
+ * DUPLICATE REGISTRATION
+ * ============================================================
+ */
+export const checkDuplicateRegistration = async (
+  req: Request,
+  res: Response,
+): Promise<void> => {
+  try {
+    const { employeeId, mobileNumber } = req.query;
+
+    if (!employeeId || !mobileNumber) {
+      res.status(400).json({
+        success: false,
+        message: "Employee ID and Mobile Number are required.",
+      });
+      return;
+    }
+
+    const existingRegistration = await Registration.findOne({
+      employeeId: String(employeeId).trim(),
+      mobileNumber: String(mobileNumber).trim(),
+    }).select("_id");
+
+    if (existingRegistration) {
+      res.status(409).json({
+        success: false,
+        duplicate: true,
+        message:
+          "This mobile number is already registered with this Employee ID. Please use a different mobile number.",
+      });
+      return;
+    }
+
+    res.status(200).json({
+      success: true,
+      duplicate: false,
+    });
+  } catch (error) {
+    console.error("Duplicate registration check error:", error);
+
+    res.status(500).json({
+      success: false,
+      message: "Unable to check registration details.",
+    });
+  }
+};
+
+/*
+ * ============================================================
  * CREATE REGISTRATION
  * ============================================================
  */
@@ -26,8 +75,19 @@ export const createRegistration = async (
       message: "Registration submitted successfully.",
       data: registration,
     });
-  } catch (error) {
+  } catch (error:any) {
     console.error("Registration creation error:", error);
+
+    // Duplicate Employee ID + Mobile Number
+    if (error?.code === 11000) {
+      res.status(409).json({
+        success: false,
+        message:
+          "This mobile number is already registered with this Employee ID. Please use a different mobile number.",
+      });
+
+      return;
+    }
 
     res.status(500).json({
       success: false,

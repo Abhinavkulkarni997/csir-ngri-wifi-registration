@@ -2,6 +2,7 @@ import { Router } from "express";
 
 import {
   createRegistration,
+   checkDuplicateRegistration,
     getRegistrations,
     updateRegistrationStatus,
     exportRegistrations,
@@ -13,6 +14,8 @@ import {
 import { requireAdmin } from "../middleware/auth.middleware";
 
 const router = Router();
+
+
 
 /*
  * ============================================================
@@ -45,7 +48,10 @@ router.get(
   exportRegistrations,
 );
 
-
+router.get(
+  "/check-duplicate",
+  checkDuplicateRegistration,
+);
 router.post(
   "/",
   validateRegistration,

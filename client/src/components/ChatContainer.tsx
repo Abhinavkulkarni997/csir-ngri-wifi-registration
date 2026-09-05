@@ -334,7 +334,7 @@ export default function ChatContainer() {
   /*
    * Submit normal text-based answer.
    */
-  const submitAnswer = (value: string) => {
+  const submitAnswer = async (value: string) => {
     /*
      * =====================================================
      * MOBILE NUMBER VALIDATION
@@ -342,9 +342,46 @@ export default function ChatContainer() {
      */
 
     if (conversation.currentQuestionId === "mobileNumber") {
-      const mobile = value.replace(/\s+/g, "");
+  const mobile = value.replace(/\s+/g, "");
 
-      if (!/^\d{10}$/.test(mobile)) {
+  if (!/^\d{10}$/.test(mobile)) {
+    setConversation((previous) => ({
+      ...previous,
+
+      messages: [
+        ...previous.messages,
+
+        {
+          id: crypto.randomUUID(),
+          role: "bot",
+          content: "Please enter a valid 10-digit mobile number.",
+          timestamp: Date.now(),
+        },
+      ],
+    }));
+
+    return;
+  }
+
+  /*
+   * =====================================================
+   * CHECK EMPLOYEE ID + MOBILE NUMBER
+   * =====================================================
+   */
+
+  const employeeId = conversation.formData.employeeId?.trim();
+
+  if (employeeId) {
+    try {
+      const response = await fetch(
+        `${API_BASE_URL}/api/registrations/check-duplicate?employeeId=${encodeURIComponent(
+          employeeId,
+        )}&mobileNumber=${encodeURIComponent(mobile)}`,
+      );
+
+      const result = await response.json();
+
+      if (response.status === 409 && result.duplicate) {
         setConversation((previous) => ({
           ...previous,
 
@@ -354,7 +391,8 @@ export default function ChatContainer() {
             {
               id: crypto.randomUUID(),
               role: "bot",
-              content: "Please enter a valid 10-digit mobile number.",
+              content:
+                "This mobile number is already registered with this Employee ID. Please use a different mobile number.",
               timestamp: Date.now(),
             },
           ],
@@ -362,9 +400,23 @@ export default function ChatContainer() {
 
         return;
       }
-      value = mobile;
-    }
 
+      if (!response.ok) {
+        console.error(
+          "Duplicate check failed:",
+          result.message,
+        );
+      }
+    } catch (error) {
+      console.error(
+        "Unable to check duplicate registration:",
+        error,
+      );
+    }
+  }
+
+  value = mobile;
+}
     /*
      * =====================================================
      * NORMAL ANSWER PROCESSING
@@ -402,6 +454,7 @@ export default function ChatContainer() {
   };
 
   const handleEdit = (questionId: string, fromReview: boolean = false) => {
+    if (conversation.completed) return;
     const question = getQuestionById(questionId);
 
     if (!question) {
@@ -849,6 +902,7 @@ export default function ChatContainer() {
                 isSubmitting={submitting}
                 completed={conversation.completed}
                 onSubmit={async () => {
+                     if (conversation.completed || submitting) return;
                   try {
                     setSubmitting(true);
 
@@ -942,63 +996,54 @@ const result = contentType.includes("application/json")
                      * an actual chatbot question ID.
                      */
                     const validationQuestionId =
-                      getQuestionIdFromValidationField(validationField);
+  getQuestionIdFromValidationField(validationField);
 
-                    setConversation((previous) => ({
-                      ...previous,
+const isDuplicate = errorMessage.includes(
+    "mobile number is already registered with this Employee ID"
+);
 
-                      /*
-                       * Move to a real question ID.
-                       *
-                       * Example:
-                       *
-                       * devices.laptop.operatingSystem
-                       *          ↓
-                       * devices
-                       */
-                      currentQuestionId:
-                        validationQuestionId || previous.currentQuestionId,
+setConversation((previous) => ({
+  ...previous,
 
-                      reviewing: false,
+  currentQuestionId:
+    validationQuestionId || previous.currentQuestionId,
 
-                      editingQuestionId: validationQuestionId || undefined,
-                      /*
-                       * This error originated from Review.
-                       *
-                       * Therefore after correcting the field,
-                       * we MUST return to Review.
-                       */
-                      returnToReviewAfterEdit: validationQuestionId
-                        ? true
-                        : undefined,
+  reviewing: isDuplicate ? true : false,
 
-                      completed: false,
+  editingQuestionId: validationQuestionId || undefined,
 
-                      messages: [
-                        ...previous.messages,
+  returnToReviewAfterEdit: validationQuestionId
+    ? true
+    : undefined,
 
-                        {
-                          id: crypto.randomUUID(),
+  completed: false,
 
-                          role: "bot",
+  messages: [
+    ...previous.messages,
 
-                          content: `${errorMessage}`,
+    {
+      id: crypto.randomUUID(),
 
-                          timestamp: Date.now(),
-                        },
-                        ...(validationField
-                          ? [
-                              {
-                                id: crypto.randomUUID(),
-                                role: "bot" as const,
-                                content:
-                                  "Please correct this detail and submit it again.",
-                                timestamp: Date.now(),
-                              },
-                            ]
-                          : []),
-                      ],
-                    }));
+      role: "bot",
+
+      content: errorMessage,
+
+      timestamp: Date.now(),
+    },
+
+    ...(validationField
+      ? [
+          {
+            id: crypto.randomUUID(),
+            role: "bot" as const,
+            content:
+              "Please correct this detail and submit it again.",
+            timestamp: Date.now(),
+          },
+        ]
+      : []),
+  ],
+}));
                   } finally {
                     setSubmitting(false);
                   }
