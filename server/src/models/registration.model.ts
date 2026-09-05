@@ -123,7 +123,7 @@ export interface IRegistration extends Document {
     | "CCMB";
    roomNumber?: string;
 };
-
+arrivalDateTime: string;
   date: string;
   place: string;
 
@@ -205,6 +205,10 @@ const registrationSchema = new Schema<IRegistration>(
       type: guesthouseSchema,
       required: true,
     },
+    arrivalDateTime: {
+  type: String,
+  required: true,
+},
 
     date: {
       type: String,

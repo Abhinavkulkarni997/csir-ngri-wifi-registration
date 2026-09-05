@@ -125,6 +125,14 @@ export const questions: ChatQuestion[] = [
     message:
       'What is your guesthouse room number?',
   },
+  {
+  id: 'arrivalDateTime',
+  type: 'arrival-date-time',
+  field: 'arrivalDateTime',
+  required: true,
+  message:
+    'What is your expected date and time of arrival at CSIR-NGRI?',
+},
 
   {
     id: 'date',

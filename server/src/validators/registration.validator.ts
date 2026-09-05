@@ -188,6 +188,20 @@ export const registrationSchema = z.object({
   }),
 
   guesthouse: guesthouseSchema,
+  arrivalDateTime: z
+  .string()
+  .min(1, "Arrival date and time is required")
+  .refine(
+    (value) => {
+      const selectedDateTime = new Date(value);
+      const now = new Date();
+
+      return selectedDateTime >= now;
+    },
+    {
+      message: "Arrival date and time cannot be in the past",
+    },
+  ),
 
  date: z
   .string()

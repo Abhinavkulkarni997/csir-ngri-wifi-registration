@@ -35,6 +35,7 @@ import {
 import { getQuestionById } from "../chatbot/questions";
 
 import type { ConversationState } from "../chatbot/questionTypes";
+import { formatDateTime } from "../utils/formatDateTime";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 export default function ChatContainer() {
@@ -492,6 +493,8 @@ export default function ChatContainer() {
       guesthouse: "Sure! Let's update your guesthouse.",
 
       roomNumber: "Sure! Let's update your guesthouse room number.",
+       arrivalDateTime:
+    "Sure! Let's update your expected arrival date and time.",
 
       date: "Sure! Let's update your registration date.",
 
@@ -606,6 +609,9 @@ export default function ChatContainer() {
 
       case "divisionGroup":
         return data.divisionGroup ?? "";
+
+      case "arrivalDateTime":
+        return data.arrivalDateTime ?? "";
 
       case "date":
         return data.date ?? "";
@@ -1703,6 +1709,36 @@ function QuestionRenderer({
           }}
         />
       );
+      case "arrival-date-time": {
+  const now = new Date();
+
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, "0");
+  const day = String(now.getDate()).padStart(2, "0");
+  const hours = String(now.getHours()).padStart(2, "0");
+  const minutes = String(now.getMinutes()).padStart(2, "0");
+
+  const minDateTime = `${year}-${month}-${day}T${hours}:${minutes}`;
+
+  return (
+    <div className="w-full">
+      <ChatInput
+        type="datetime-local"
+        placeholder="Select expected arrival date & time"
+        initialValue={existingAnswer}
+        min={minDateTime}
+        onSubmit={onSubmit}
+      />
+
+      {existingAnswer && (
+        <p className="mt-2 text-sm text-slate-600">
+          Selected arrival:{" "}
+          {formatDateTime(existingAnswer)}
+        </p>
+      )}
+    </div>
+  );
+}
 
     /* ========================================================
    DATE

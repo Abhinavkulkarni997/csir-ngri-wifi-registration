@@ -1,6 +1,20 @@
-import {Request,Response} from "express";
+import { Request, Response } from "express";
 import ExcelJS from "exceljs";
 import Registration from "../models/registration.model";
+
+
+const formatDateTime = (value: string) => {
+  if (!value) return "";
+
+  return new Date(value).toLocaleString("en-IN", {
+    day: "2-digit",
+    month: "long",
+    year: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+    hour12: true,
+  });
+};
 
 /*
  * ============================================================
@@ -62,20 +76,19 @@ export const createRegistration = async (
 ): Promise<void> => {
   try {
     const registration = await Registration.create(req.body);
-     console.log("=================================");
+    console.log("=================================");
     console.log("REGISTRATION SAVED");
     console.log("MongoDB ID:", registration._id);
     console.log("Database:", Registration.db.name);
     console.log("Collection:", Registration.collection.name);
     console.log("=================================");
 
-
     res.status(201).json({
       success: true,
       message: "Registration submitted successfully.",
       data: registration,
     });
-  } catch (error:any) {
+  } catch (error: any) {
     console.error("Registration creation error:", error);
 
     // Duplicate Employee ID + Mobile Number
@@ -95,7 +108,6 @@ export const createRegistration = async (
     });
   }
 };
-
 
 /*
  * ============================================================
@@ -131,20 +143,12 @@ export const getRegistrations = async (
   res: Response,
 ): Promise<void> => {
   try {
-    const page = Math.max(
-      Number(req.query.page) || 1,
-      1,
-    );
+    const page = Math.max(Number(req.query.page) || 1, 1);
 
-    const limit = Math.min(
-      Math.max(Number(req.query.limit) || 20, 1),
-      100,
-    );
+    const limit = Math.min(Math.max(Number(req.query.limit) || 20, 1), 100);
 
     const search =
-      typeof req.query.search === "string"
-        ? req.query.search.trim()
-        : "";
+      typeof req.query.search === "string" ? req.query.search.trim() : "";
 
     const organization =
       typeof req.query.organization === "string"
@@ -152,14 +156,10 @@ export const getRegistrations = async (
         : "";
 
     const status =
-      typeof req.query.status === "string"
-        ? req.query.status.trim()
-        : "";
+      typeof req.query.status === "string" ? req.query.status.trim() : "";
 
     const device =
-      typeof req.query.device === "string"
-        ? req.query.device.trim()
-        : "";
+      typeof req.query.device === "string" ? req.query.device.trim() : "";
 
     /*
      * ========================================================
@@ -263,7 +263,7 @@ export const getRegistrations = async (
         .lean(),
 
       Registration.countDocuments(filter),
-       Registration.countDocuments(),
+      Registration.countDocuments(),
 
       Registration.countDocuments({
         // ...filter,
@@ -306,10 +306,7 @@ export const getRegistrations = async (
       data: registrations,
     });
   } catch (error) {
-    console.error(
-      "Failed to fetch registrations:",
-      error,
-    );
+    console.error("Failed to fetch registrations:", error);
 
     res.status(500).json({
       success: false,
@@ -318,12 +315,11 @@ export const getRegistrations = async (
   }
 };
 
-
 /*
-     * ========================================================
-     * EXPORT REGISTRATIONS
-     * ========================================================
-     */
+ * ========================================================
+ * EXPORT REGISTRATIONS
+ * ========================================================
+ */
 
 export const exportRegistrations = async (
   req: Request,
@@ -336,12 +332,11 @@ export const exportRegistrations = async (
       status = "",
       device = "",
     } = req.query;
-console.log("========== EXCEL EXPORT ==========");
-console.log("search:", search);
-console.log("organization:", organization);
-console.log("status:", status);
-console.log("device:", device);
-
+    console.log("========== EXCEL EXPORT ==========");
+    console.log("search:", search);
+    console.log("organization:", organization);
+    console.log("status:", status);
+    console.log("device:", device);
 
     const filter: Record<string, unknown> = {};
 
@@ -365,63 +360,42 @@ console.log("device:", device);
     }
 
     // Organization filter
-    if (
-  organization &&
-  organization !== "all"
-) {
-  filter["organization.name"] = String(
-    organization,
-  );
-}
+    if (organization && organization !== "all") {
+      filter["organization.name"] = String(organization);
+    }
 
     // Status filter
-    if (
-  status &&
-  status !== "all"
-) {
-  filter.status = String(status);
-}
+    if (status && status !== "all") {
+      filter.status = String(status);
+    }
 
     // Device filter
-    if (
-  device &&
-  device !== "all"
-) {
-  if (device === "laptop") {
-    filter["devices.laptop.requested"] = true;
-  }
+    if (device && device !== "all") {
+      if (device === "laptop") {
+        filter["devices.laptop.requested"] = true;
+      }
 
-  if (device === "smartphone") {
-    filter["devices.smartphone.requested"] = true;
-  }
-}
+      if (device === "smartphone") {
+        filter["devices.smartphone.requested"] = true;
+      }
+    }
 
-    const registrations = await Registration.find(
-      filter,
-    )
+    const registrations = await Registration.find(filter)
       .sort({ createdAt: -1 })
       .lean();
 
+    console.log("Export filter:", JSON.stringify(filter, null, 2));
 
-      console.log(
-  "Export filter:",
-  JSON.stringify(filter, null, 2),
-);
+    console.log("Export registrations count:", registrations.length);
 
-console.log(
-  "Export registrations count:",
-  registrations.length,
-);
-
-console.log("=================================");
+    console.log("=================================");
 
     const workbook = new ExcelJS.Workbook();
 
     workbook.creator = "CSIR-NGRI";
     workbook.created = new Date();
 
-    const worksheet =
-      workbook.addWorksheet("Registrations");
+    const worksheet = workbook.addWorksheet("Registrations");
 
     worksheet.columns = [
       {
@@ -510,6 +484,11 @@ console.log("=================================");
         width: 15,
       },
       {
+        header: "Expected Arrival Date & Time",
+        key: "arrivalDateTime",
+        width: 25,
+      },
+      {
         header: "Date",
         key: "date",
         width: 15,
@@ -531,80 +510,54 @@ console.log("=================================");
       },
     ];
 
-    registrations.forEach(
-      (registration, index) => {
-        worksheet.addRow({
-          sno: index + 1,
+    registrations.forEach((registration, index) => {
+      worksheet.addRow({
+        sno: index + 1,
 
-          fullName: registration.fullName,
+        fullName: registration.fullName,
 
-          employeeId: registration.employeeId,
+        employeeId: registration.employeeId,
 
-          designation: registration.designation,
+        designation: registration.designation,
 
-          email: registration.institutionEmail,
+        email: registration.institutionEmail,
 
-          mobileNumber: registration.mobileNumber,
+        mobileNumber: registration.mobileNumber,
 
-          organization:
-            registration.organization?.name || "",
+        organization: registration.organization?.name || "",
 
-          divisionGroup:
-            registration.divisionGroup,
+        divisionGroup: registration.divisionGroup,
 
-          laptop:
-            registration.devices?.laptop?.requested
-              ? "Yes"
-              : "No",
+        laptop: registration.devices?.laptop?.requested ? "Yes" : "No",
 
-          laptopOS:
-            registration.devices?.laptop
-              ?.operatingSystem || "",
+        laptopOS: registration.devices?.laptop?.operatingSystem || "",
 
-          laptopMAC:
-            registration.devices?.laptop
-              ?.macAddress || "",
+        laptopMAC: registration.devices?.laptop?.macAddress || "",
 
-          smartphone:
-            registration.devices?.smartphone
-              ?.requested
-              ? "Yes"
-              : "No",
+        smartphone: registration.devices?.smartphone?.requested ? "Yes" : "No",
 
-          smartphoneOS:
-            registration.devices?.smartphone
-              ?.operatingSystem || "",
+        smartphoneOS: registration.devices?.smartphone?.operatingSystem || "",
 
-          smartphoneMAC:
-            registration.devices?.smartphone
-              ?.macAddress || "",
+        smartphoneMAC: registration.devices?.smartphone?.macAddress || "",
 
-          guesthouse:
-            registration.guesthouse?.staying
-              ? "Yes"
-              : "No",
+        guesthouse: registration.guesthouse?.staying ? "Yes" : "No",
 
-          guesthouseName:
-            registration.guesthouse?.name || "",
+        guesthouseName: registration.guesthouse?.name || "",
 
-          roomNumber:
-            registration.guesthouse?.roomNumber ||
-            "",
+        roomNumber: registration.guesthouse?.roomNumber || "",
 
-          date: registration.date,
+        arrivalDateTime: formatDateTime(registration.arrivalDateTime),
+        date: registration.date,
 
-          place: registration.place,
+        place: registration.place,
 
-          status: registration.status,
+        status: registration.status,
 
-          createdAt: registration.createdAt
-            ? new Date(
-                registration.createdAt,
-              ).toLocaleString("en-IN")
-            : "",
-        });
-      },
-    );
+        createdAt: registration.createdAt
+          ? new Date(registration.createdAt).toLocaleString("en-IN")
+          : "",
+      });
+    });
 
     // Header formatting
     const headerRow = worksheet.getRow(1);
@@ -666,25 +619,18 @@ console.log("=================================");
       "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
     );
 
-    res.setHeader(
-      "Content-Disposition",
-      `attachment; filename="${filename}"`,
-    );
+    res.setHeader("Content-Disposition", `attachment; filename="${filename}"`);
 
     await workbook.xlsx.write(res);
 
     res.end();
   } catch (error) {
-    console.error(
-      "Registration Excel export error:",
-      error,
-    );
+    console.error("Registration Excel export error:", error);
 
     if (!res.headersSent) {
       res.status(500).json({
         success: false,
-        message:
-          "Failed to export registrations.",
+        message: "Failed to export registrations.",
       });
     }
   }
@@ -695,7 +641,6 @@ console.log("=================================");
  * UPDATE REGISTRATIONS
  * ============================================================
  */
-
 
 export const updateRegistrationStatus = async (
   req: Request,
@@ -714,15 +659,14 @@ export const updateRegistrationStatus = async (
       return;
     }
 
-    const registration =
-      await Registration.findByIdAndUpdate(
-        id,
-        { status },
-        {
-          new: true,
-          runValidators: true,
-        },
-      );
+    const registration = await Registration.findByIdAndUpdate(
+      id,
+      { status },
+      {
+        new: true,
+        runValidators: true,
+      },
+    );
 
     if (!registration) {
       res.status(404).json({
@@ -739,10 +683,7 @@ export const updateRegistrationStatus = async (
       data: registration,
     });
   } catch (error) {
-    console.error(
-      "Registration status update error:",
-      error,
-    );
+    console.error("Registration status update error:", error);
 
     res.status(500).json({
       success: false,

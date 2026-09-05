@@ -4,7 +4,7 @@ import { ArrowUp } from 'lucide-react';
 
 interface ChatInputProps {
   placeholder?: string;
-  type?: 'text' | 'email' | 'tel'|'date';
+  type?: 'text' | 'email' | 'tel' | 'date' | 'datetime-local';
   min?:string;
    max?: string;
    initialValue?: string;

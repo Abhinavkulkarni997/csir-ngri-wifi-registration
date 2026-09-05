@@ -8,7 +8,7 @@ import {
 
 import type { RegistrationFormData } from "../schemas/registration.schema";
 import { getGuesthouseLabel } from "../utils/guesthouseLabels";
-
+import { formatDateTime } from "../utils/formatDateTime";
 interface ChatReviewProps {
   formData: Partial<RegistrationFormData>;
   onEdit: (questionId: string) => void;
@@ -232,6 +232,16 @@ export default function ChatReview({
                 />
               </>
             )}
+            {/* EXPECTED ARRIVAL */}
+<ReviewRow
+  label="Expected Arrival"
+   value={formatDateTime(formData.arrivalDateTime ?? "")}
+  questionId="arrivalDateTime"
+  onEdit={onEdit}
+  disabled={isSubmitting}
+/>
+
+
 
             {/* DATE */}
             <ReviewRow

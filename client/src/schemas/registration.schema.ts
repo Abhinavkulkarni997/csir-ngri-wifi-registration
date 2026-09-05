@@ -170,6 +170,9 @@ export const registrationSchema = z
       }),
 
     guesthouse: guesthouseSchema,
+    arrivalDateTime: z
+  .string()
+  .min(1, 'Please select your expected arrival date and time.'),
 
     date: z
   .string()

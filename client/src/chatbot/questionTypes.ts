@@ -22,6 +22,7 @@ export type QuestionType =
   | 'guesthouse-yes-no'
   | 'guesthouse-select'
   | 'room-number'
+  | 'arrival-date-time'
   | 'date'
   | 'place'
   | 'declaration'

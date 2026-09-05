@@ -17,7 +17,7 @@ import {
 import Csirlogo from "../assets/csirlogo.jpg";
 import NgriLogo from "../assets/ngrilogo.png";
 import { getGuesthouseLabel } from "../utils/guesthouseLabels";
-
+import { formatDateTime } from "../utils/formatDateTime";
 
 const API_BASE_URL =import.meta.env.VITE_API_BASE_URL;
 interface Device {
@@ -51,6 +51,7 @@ interface Registration {
     name?: string;
     roomNumber?: string;
   };
+  arrivalDateTime: string;
 
   date: string;
   place: string;
@@ -1167,10 +1168,14 @@ const handleDownloadExcel = async () => {
                 </h4>
 
                 <div className="grid grid-cols-1 gap-4 rounded-xl border border-slate-200 bg-slate-50 p-4 sm:grid-cols-2">
-                  <Detail
-                    label="Date"
-                    value={formatDate(selectedRegistration.date)}
-                  />
+                   <Detail
+    label="Expected Arrival Date & Time"
+    value={formatDateTime(selectedRegistration.arrivalDateTime)}
+  />
+                   <Detail
+    label="Date of Registration"
+    value={formatDate(selectedRegistration.date)}
+  />
 
                   <Detail label="Place" value={selectedRegistration.place} />
 

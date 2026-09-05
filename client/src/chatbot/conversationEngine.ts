@@ -26,13 +26,13 @@ export const createInitialConversation = (): ConversationState => {
 
             timestamp: Date.now(),
           },
-    //        {
-    //     id: crypto.randomUUID(),
-    //     role: "bot",
-    //     content:
-    //       "Important Instructions:\n\n• Please read the form carefully and enter all details correctly before submitting.\n• For the best experience, please use the latest version of Google Chrome or Mozilla Firefox.",
-    //     timestamp: Date.now(),
-    //   },
+          //        {
+          //     id: crypto.randomUUID(),
+          //     role: "bot",
+          //     content:
+          //       "Important Instructions:\n\n• Please read the form carefully and enter all details correctly before submitting.\n• For the best experience, please use the latest version of Google Chrome or Mozilla Firefox.",
+          //     timestamp: Date.now(),
+          //   },
         ]
       : [],
 
@@ -122,7 +122,7 @@ export const getNextQuestionId = (
     //   return "guesthouseStaying";
     // }
     case "devices":
-        return "smartphoneOS";
+      return "smartphoneOS";
     /* =====================================================
        LAPTOP MAC ADDRESS
        ===================================================== */
@@ -158,6 +158,16 @@ export const getNextQuestionId = (
        GUESTHOUSE
        ===================================================== */
 
+    // case "guesthouseStaying": {
+    //   const stayingAtGuesthouse = formData.guesthouse?.staying === true;
+
+    //   if (stayingAtGuesthouse) {
+    //     return "guesthouse";
+    //   }
+
+    //   return "date";
+    // }
+
     case "guesthouseStaying": {
       const stayingAtGuesthouse = formData.guesthouse?.staying === true;
 
@@ -165,7 +175,9 @@ export const getNextQuestionId = (
         return "guesthouse";
       }
 
-      return "date";
+      // Even if not staying in guesthouse,
+      // arrival date & time is still required.
+      return "arrivalDateTime";
     }
 
     /* =====================================================
@@ -180,6 +192,12 @@ export const getNextQuestionId = (
        ===================================================== */
 
     case "roomNumber":
+      return "arrivalDateTime";
+    /* =====================================================
+   ARRIVAL DATE & TIME
+   ===================================================== */
+
+    case "arrivalDateTime":
       return "date";
 
     /* =====================================================
