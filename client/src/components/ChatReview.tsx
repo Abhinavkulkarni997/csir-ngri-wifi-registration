@@ -47,7 +47,7 @@ export default function ChatReview({
             </h3>
 
             <p className="mt-2 text-sm text-slate-600">
-              Your Wi-Fi registration has been submitted successfully.
+              Your Registration Form  has been submitted successfully.
             </p>
 
             <p className="mt-1 text-xs text-slate-500">
