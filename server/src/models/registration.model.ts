@@ -121,6 +121,7 @@ export interface IRegistration extends Document {
     | "IICT_GUEST_HOUSE"
     | "NGRI"
     | "CCMB";
+   roomNumber?: string;
 };
 
   date: string;
