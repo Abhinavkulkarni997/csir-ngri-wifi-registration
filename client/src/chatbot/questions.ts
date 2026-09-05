@@ -11,7 +11,7 @@ export const questions: ChatQuestion[] = [
     field: 'fullName',
     required: true,
     message:
-      "Hello!  Welcome to the CSIR-NGRI Wi-Fi Registration Portal. I'll guide you through the registration. To begin, what is your full name?(Please mention the name dispalyed in your official ID Card , this will be printed on the certificate) ",
+      "Hello!  Welcome to the CSIR-NGRI  Registration Form Portal. I'll guide you through the registration. To begin, what is your full name?(Please mention the name dispalyed in your official ID Card , this will be printed on the certificate) ",
   },
 
   {
