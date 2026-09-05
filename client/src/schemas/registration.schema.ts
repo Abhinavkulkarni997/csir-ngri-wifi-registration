@@ -76,7 +76,14 @@ const smartphoneSchema = z
 const guesthouseSchema = z
   .object({
     staying: z.boolean(),
-    name: z.enum(['IICT', 'NGRI', 'CCMB']).optional(),
+    name: z
+  .enum([
+    'IICT_PRAGYAN_HOSTEL',
+    'IICT_GUEST_HOUSE',
+    'NGRI',
+    'CCMB',
+  ])
+  .optional(),
     roomNumber: z.string().trim().optional(),
   })
   .superRefine((guesthouse, ctx) => {

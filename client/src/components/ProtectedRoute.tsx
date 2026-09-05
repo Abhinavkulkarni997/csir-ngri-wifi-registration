@@ -72,7 +72,7 @@ const ProtectedRoute = ({
   if (!authenticated) {
     return (
       <Navigate
-        to="/wifi-admin/login"
+        to="/admin/login"
         replace
       />
     );

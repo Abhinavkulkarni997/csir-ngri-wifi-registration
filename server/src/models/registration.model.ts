@@ -43,9 +43,14 @@ const guesthouseSchema = new Schema(
     },
 
     name: {
-      type: String,
-      enum: ["IICT", "NGRI", "CCMB"],
-    },
+  type: String,
+  enum: [
+    "IICT_PRAGYAN_HOSTEL",
+    "IICT_GUEST_HOUSE",
+    "NGRI",
+    "CCMB",
+  ],
+},
 
     roomNumber: {
       type: String,
@@ -110,10 +115,13 @@ export interface IRegistration extends Document {
   };
 
   guesthouse: {
-    staying: boolean;
-    name?: "IICT" | "NGRI" | "CCMB";
-    roomNumber?: string;
-  };
+  staying: boolean;
+  name?:
+    | "IICT_PRAGYAN_HOSTEL"
+    | "IICT_GUEST_HOUSE"
+    | "NGRI"
+    | "CCMB";
+};
 
   date: string;
   place: string;

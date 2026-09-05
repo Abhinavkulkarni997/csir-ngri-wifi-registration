@@ -16,7 +16,7 @@ import {
 } from "lucide-react";
 import Csirlogo from "../assets/csirlogo.jpg";
 import NgriLogo from "../assets/ngrilogo.png";
-
+import { getGuesthouseLabel } from "../utils/guesthouseLabels";
 
 
 const API_BASE_URL =import.meta.env.VITE_API_BASE_URL;
@@ -515,7 +515,7 @@ const handleDownloadExcel = async () => {
     );
 
     if (response.status === 401) {
-      navigate("/wifi-admin/login", {
+      navigate("/admin/login", {
         replace: true,
       });
 
@@ -937,9 +937,15 @@ const handleDownloadExcel = async () => {
                         {/* GUESTHOUSE */}
 
                         <td className="px-5 py-4 text-sm text-slate-600">
-                          {registration.guesthouse.staying
-                            ? registration.guesthouse.name || "Yes"
-                            : "No"}
+                         {registration.guesthouse.staying
+  ? getGuesthouseLabel(
+      registration.guesthouse.name as
+        | "IICT_PRAGYAN_HOSTEL"
+        | "IICT_GUEST_HOUSE"
+        | "NGRI"
+        | "CCMB"
+    ) || "Yes"
+  : "No"}
                         </td>
 
                         {/* DATE */}
@@ -1135,10 +1141,17 @@ const handleDownloadExcel = async () => {
                   />
 
                   <Detail
-                    label="Guesthouse"
-                    value={selectedRegistration.guesthouse.name || "—"}
-                  />
-
+  label="Guesthouse"
+  value={
+    getGuesthouseLabel(
+      selectedRegistration.guesthouse.name as
+        | "IICT_PRAGYAN_HOSTEL"
+        | "IICT_GUEST_HOUSE"
+        | "NGRI"
+        | "CCMB"
+    ) || "—"
+  }
+/>
                   <Detail
                     label="Room Number"
                     value={selectedRegistration.guesthouse.roomNumber || "—"}

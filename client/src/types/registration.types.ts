@@ -2,7 +2,12 @@ export type LaptopOS = 'Windows' | 'Linux' | 'macOS';
 
 export type SmartphoneOS = 'Android' | 'iOS';
 
-export type GuesthouseName = 'IICT' | 'NGRI' | 'CCMB';
+
+export type GuesthouseName =
+  | 'IICT_PRAGYAN_HOSTEL'
+  | 'IICT_GUEST_HOUSE'
+  | 'NGRI'
+  | 'CCMB';
 
 export interface Organization {
   id: number;

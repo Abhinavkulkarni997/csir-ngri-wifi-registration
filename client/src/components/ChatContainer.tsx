@@ -24,6 +24,7 @@ import OrganizationSelector from "./OrganizationSelector";
 import MacAddressInput from "./MacAddressInput";
 import DeclarationCard from "./DeclarationCard";
 import ChatReview from "./ChatReview";
+import { getGuesthouseLabel } from "../utils/guesthouseLabels";
 
 import {
   createInitialConversation,
@@ -869,9 +870,14 @@ export default function ChatContainer() {
                       },
                     );
 
-                    const result = await response.json();
+                    const contentType = response.headers.get("content-type") || "";
 
-                    console.log("Backend response:", result);
+const result = contentType.includes("application/json")
+  ? await response.json()
+  : {
+      success: false,
+      message: `Server returned ${response.status} ${response.statusText}`,
+    };
                     console.log(
                       "Validation errors:",
                       JSON.stringify(result.errors, null, 2),
@@ -1537,68 +1543,80 @@ function QuestionRenderer({
        ======================================================== */
 
     case "guesthouse-select":
-      return (
-        <OptionCards
-          options={[
-            {
-              value: "IICT",
-              label: "IICT",
-              description: "Indian Institute of Chemical Technology",
-              icon: <Building2 size={26} strokeWidth={1.8} />,
-            },
+  return (
+    <OptionCards
+      options={[
+        {
+          value: "IICT_PRAGYAN_HOSTEL",
+          label: "IICT Pragyan Hostel",
+          description: "Indian Institute of Chemical Technology",
+          icon: <Building2 size={26} strokeWidth={1.8} />,
+        },
+        {
+          value: "IICT_GUEST_HOUSE",
+          label: "IICT Guest House",
+          description: "Indian Institute of Chemical Technology",
+          icon: <Building2 size={26} strokeWidth={1.8} />,
+        },
+        {
+          value: "NGRI",
+          label: "NGRI Guest House",
+          description: "National Geophysical Research Institute",
+          icon: <Building2 size={26} strokeWidth={1.8} />,
+        },
+        {
+          value: "CCMB",
+          label: "CCMB Guest House",
+          description: "Centre for Cellular and Molecular Biology",
+          icon: <Building2 size={26} strokeWidth={1.8} />,
+        },
+      ]}
+      onSelect={([value]) => {
+        const updatedState: ConversationState = {
+          ...conversation,
+
+          messages: [
+            ...conversation.messages,
 
             {
-              value: "NGRI",
-              label: "NGRI",
-              description: "National Geophysical Research Institute",
-              icon: <Building2 size={26} strokeWidth={1.8} />,
+              id: crypto.randomUUID(),
+              role: "user",
+            //   content: value,
+            content: getGuesthouseLabel(
+  value as
+    | "IICT_PRAGYAN_HOSTEL"
+    | "IICT_GUEST_HOUSE"
+    | "NGRI"
+    | "CCMB",
+),
+              timestamp: Date.now(),
+              questionId: "guesthouse",
             },
+          ],
 
-            {
-              value: "CCMB",
-              label: "CCMB",
-              description: "Centre for Cellular and Molecular Biology",
-              icon: <Building2 size={26} strokeWidth={1.8} />,
+          formData: {
+            ...conversation.formData,
+
+            guesthouse: {
+              ...conversation.formData.guesthouse,
+
+              staying: true,
+
+              name: value as
+                | "IICT_PRAGYAN_HOSTEL"
+                | "IICT_GUEST_HOUSE"
+                | "NGRI"
+                | "CCMB",
             },
-          ]}
-          onSelect={([value]) => {
-            const updatedState: ConversationState = {
-              ...conversation,
+          },
+        };
 
-              messages: [
-                ...conversation.messages,
+        setConversation(updatedState);
 
-                {
-                  id: crypto.randomUUID(),
-
-                  role: "user",
-
-                  content: value,
-
-                  timestamp: Date.now(),
-                  questionId: "guesthouse",
-                },
-              ],
-
-              formData: {
-                ...conversation.formData,
-
-                guesthouse: {
-                  ...conversation.formData.guesthouse,
-
-                  staying: true,
-
-                  name: value as "IICT" | "NGRI" | "CCMB",
-                },
-              },
-            };
-
-            setConversation(updatedState);
-
-            showNextQuestion(updatedState);
-          }}
-        />
-      );
+        showNextQuestion(updatedState);
+      }}
+    />
+  );
 
     /* ========================================================
        ROOM NUMBER

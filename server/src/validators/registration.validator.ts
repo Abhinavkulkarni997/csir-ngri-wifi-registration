@@ -100,7 +100,7 @@ const guesthouseSchema = z
     staying: z.boolean(),
 
     name: z
-      .enum(["IICT", "NGRI", "CCMB"])
+      .enum(["IICT_PRAGYAN_HOSTEL", "IICT_GUEST_HOUSE", "NGRI", "CCMB"])
       .optional(),
 
     roomNumber: z

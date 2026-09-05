@@ -7,6 +7,7 @@ import {
 } from "lucide-react";
 
 import type { RegistrationFormData } from "../schemas/registration.schema";
+import { getGuesthouseLabel } from "../utils/guesthouseLabels";
 
 interface ChatReviewProps {
   formData: Partial<RegistrationFormData>;
@@ -216,7 +217,7 @@ export default function ChatReview({
               <>
                 <ReviewRow
                   label="Guesthouse"
-                  value={guesthouse.name}
+                  value={getGuesthouseLabel(guesthouse.name)}
                   questionId="guesthouse"
                   onEdit={onEdit}
                   disabled={isSubmitting}
