@@ -387,7 +387,7 @@ export default function MacAddressInput({
                     </span>
                     . Look for{' '}
                     <span className="font-medium">
-                      Wi-Fi MAC address
+                      Device Wi-Fi MAC address
                     </span>
                     under Status, Phone information, or similar.
                   </p>
